@@ -1222,6 +1222,9 @@ function! s:get_lua_completion(ctx, res, fuzzy) abort
     let l:arg_pos = len(a:res.arg)
   else
     let [l:candidates, l:arg_pos] = luaeval('{vim._expand_pat("^" .. _A[1])}', [a:res.arg])
+    if has('nvim-0.9.0') && l:arg_pos > 0
+        let l:arg_pos = l:arg_pos - 1   " see wilder.nvim#187, neovim#23363
+    endif
 
     if a:fuzzy
       let l:last_char = a:res.arg[-1 :]
