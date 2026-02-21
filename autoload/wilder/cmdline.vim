@@ -711,6 +711,15 @@ function! wilder#cmdline#prepare_user_completion(ctx, res) abort
         \ l:user_command['complete'] !=# 'customlist'
     let l:res = copy(a:res)
     let l:res['expand'] = l:user_command['complete']
+    " NVIM 0.12+ gives complete as a Lua function which breaks wildmenu (#36415)
+    " NVIM <= 0.11 used to return a string ("<Lua function>")
+    " HACK: Match the pre-0.12 behavior so wildmenu for completion can just work.
+    " I don't know why and exactly where having a funcref instead of a string
+    " (which does not seem to be used anywhere) breaks the pipeline,
+    " but it's a good workaround.
+    if type(l:res['expand']) == 2
+      let l:res['expand'] = '<Lua function>'
+    endif
 
     return [0, 0, l:res]
   endif
