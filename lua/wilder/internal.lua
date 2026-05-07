@@ -2,7 +2,7 @@ local _M = {}
 
 _M.fzy_filter = function(xs, q)
   local scores = require'fzy-lua-native'.filter(q, xs, false)
-  result = {}
+  local result = {}
 
   table.sort(scores, function(a, b)
     if b[3] == nil then
